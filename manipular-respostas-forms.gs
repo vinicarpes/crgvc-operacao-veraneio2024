@@ -1,18 +1,14 @@
-function percorrerPlanilha() {
-  let url = 'https://docs.google.com/spreadsheets/d/1fm1INLQZ1_mvzsb-rFOJkh8DA5dKKyg0ulGayvlg9a4/edit?gid=0#gid=0'
+function salvarArquivosDrive() {
+  let url = 'URL_PLANILHA'
   let planilha = SpreadsheetApp.openByUrl(url); //acessa a planilha pela url
   let aba = planilha.getSheets()[0]; //pega os dados da aba
   let dados = aba.getDataRange().getValues(); //pega os dados da planilha
-  // var name = "Teste"
-  // planilha.insertSheet(name); adiciona uma folha nova à planilha
-
-
+ 
 /*
-
-nessa seção crio uma  subpasta na pasta Mãe que desejo.
-aplicand um laço de repetição é possível criar uma pasta para cada elemento da planilha que eu desejar
+Nessa seção crio uma  subpasta na pastaMae que desejo.
+Aplicando um laço de repetição é possível criar uma pasta para cada elemento da planilha
 */
-  let idPastaMae = '1Ow_myOFhBSor89AkV2iiFv350m59n5Y0';
+  let idPastaMae = 'ID_PASTA';
   let pastaMae = DriveApp.getFolderById(idPastaMae);
 
   for(let i=1; i<dados.length; i++){
@@ -20,33 +16,49 @@ aplicand um laço de repetição é possível criar uma pasta para cada elemento
    
       if(nomeRespondente && !pastaMae.getFoldersByName(nomeRespondente).hasNext()){
         //para pegar todos os arquivos, possivelmente teria que criar mais variáveis
-          let pastaFilha = pastaMae.createFolder(nomeRespondente);
-          let linkArquivo = dados[i][2]; //assumindo que a coluna c tenha os links dos arquios
+        let pastaFilha = pastaMae.createFolder(nomeRespondente);
+        let linkID = dados[i][2]; //assumindo que a coluna c tenha os links dos arquios
+        let linkFoto = dados[i][4]; //assumindo que a coluna c tenha os links dos arquios
 
-            if(linkArquivo){
+          if(linkID && linkFoto){
 
-              let fileId = extrairIdArquivo(linkArquivo);
+            let fileId = extrairIdArquivo(linkID);
+            let fileFoto = extrairIdArquivo(linkFoto);
 
-                if(fileId){
-                  let arquivo = DriveApp.getFileById(fileId);
-                  arquivo.setName("Nome arquivo " + nomeRespondente);
-                  arquivo.moveTo(pastaFilha);
+            if(fileId && fileFoto){
+              let arquivo = DriveApp.getFileById(fileId);
+              let arquivoFoto = DriveApp.getFileById(fileFoto);
 
-                  Logger.log("Arquivo movido para a pasta " + pastaFilha.getName());
+              arquivo.setName("ID " + nomeRespondente); //Nomear conforme necessário
+              arquivo.moveTo(pastaFilha);
+
+              arquivoFoto.setName("Foto " + nomeRespondente); //Nomear conforme necessário
+              arquivoFoto.moveTo(pastaFilha);
+
+              Logger.log("Arquivos movidos para a pasta " + pastaFilha.getName());
             }
       }
-    }else if(nomeRespondente && pastaMae.getFoldersByName(nomeRespondente).hasNext()){
-      let pastaFilha = pastaMae.getFoldersByName(nomeRespondente).next();
-      let linkArquivo = dados[i][2]; //assumindo que a coluna c tenha os links dos arquios
+      }else if(nomeRespondente && pastaMae.getFoldersByName(nomeRespondente).hasNext()){
+        let pastaFilha = pastaMae.getFoldersByName(nomeRespondente).next();
+        let linkID = dados[i][2]; //assumindo que a coluna c tenha os links dos arquios
+        let linkFoto = dados[i][4];
 
-        if(linkArquivo){
-          let fileId = extrairIdArquivo(linkArquivo);
+        if(linkID && linkFoto){
+          let fileId = extrairIdArquivo(linkID);
+          let fileFoto = extrairIdArquivo(linkFoto);
+          
+          if(fileId && fileFoto){ 
 
-            if(fileId){ 
-              let arquivo = DriveApp.getFileById(fileId);
-              arquivo.setName("Nome arquivo " + nomeRespondente);
-              arquivo.moveTo(pastaFilha);
-              Logger.log("Arquivo movido para a pasta existente " + pastaFilha.getName());
+            let arquivo = DriveApp.getFileById(fileId);
+            let arquivoFoto = DriveApp.getFileById(fileFoto);
+
+            arquivo.setName("Arquivo " + nomeRespondente);
+            arquivo.moveTo(pastaFilha);
+
+            arquivoFoto.setName("Foto de" + nomeRespondente);
+            arquivoFoto.moveTo(pastaFilha);
+
+            Logger.log("Arquivo movido para a pasta existente " + pastaFilha.getName());
         }
       }
     }
@@ -56,7 +68,7 @@ aplicand um laço de repetição é possível criar uma pasta para cada elemento
  
 function extrairIdArquivo(link){
 
-let match = link.match(/[-\w]{25,}/);
+  let match = link.match(/[-\w]{25,}/);
 
-return match ? match[0] : null;
+  return match ? match[0] : null;
 }
