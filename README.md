@@ -1,6 +1,11 @@
-# apps-sheets-formul-rios
+# manipular-respostas-forms.gs
 
-Nesse repositório estarei depositando códigos que gerei para manipular respostas de formulários google no formato de google sheets.
+Este script foi criado para automatizar o processo de gerenciamento de arquivos obtidos por um formulário.
 
-Qual a principal função do código?
-R: Criar uma pasta com o nome escolhido pelo respondente, pegar os arquivos inseridos em cada resposta do formulário e mover para a pasta respectiva.
+Sua principal função é obter os arquivos enviados por cada pessoa, renomear com as informações relevantes (ex: ID Fulano) e enviar/criar para uma pasta com o nome do respondente.
+
+# atualizarCelulasSheets.gs
+
+Este script foi criado para extrair os dados mais relevantes de uma resposta a um formulário e os adicionar em uma planilha de resumo com base no identificador de cada resposta.
+
+Cada identificador só aparecerá uma vez na planilha de resumo, ou seja, apenas a última inserção(mais recente) de determinado id será adicionado.
