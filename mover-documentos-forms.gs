@@ -6,7 +6,7 @@ function main() {
   let respostasForms = aba.getDataRange().getValues();
   let idPastaMae = '1K6T6pX5V4Zyf8frl5qshNLhnP74YOvyQ';
 
-  for(let linha = 0; linha<respostasForms.length(); linha++){
+  for(let linha = 1; linha<respostasForms.length; linha++){
     criarPasta(idPastaMae, respostasForms, linha, abaSuporte);
   }
 
@@ -19,7 +19,7 @@ function criarPasta(idPastaMae, respostasForms, linha, abaSuporte){
   if(nomeRespondente && !pastaMae.getFoldersByName(nomeRespondente).hasNext()){
     let pastaFilha = pastaMae.createFolder(nomeRespondente);
 
-    moverArquivo(pastaFilha, linha, abaSuporte, respostasForms);
+    moverArquivo(pastaFilha, linha, abaSuporte, respostasForms, nomeRespondente);
   }
   else if(nomeRespondente && pastaMae.getFoldersByName(nomeRespondente).hasNext()){
     Logger.log('PASTA COM NOME ' + nomeRespondente + ' EXISTENTE');
@@ -27,7 +27,7 @@ function criarPasta(idPastaMae, respostasForms, linha, abaSuporte){
 
 }
 
-function moverArquivo(pastaFilha, linha, abaSuporte, respostasForms){
+function moverArquivo(pastaFilha, linha, abaSuporte, respostasForms,nomeRespondente){
   let nomeDocumentos = abaSuporte.getDataRange().getValues();
 
   for(let j = 18; j<26;j++){
