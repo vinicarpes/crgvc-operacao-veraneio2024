@@ -19,10 +19,14 @@ function criarPasta(idPastaMae, respostasForms, linha, abaSuporte){
   if(nomeRespondente && !pastaMae.getFoldersByName(nomeRespondente).hasNext()){
     let pastaFilha = pastaMae.createFolder(nomeRespondente);
 
+    Logger.log('*****************NOVA PASTA**********************');
     moverArquivo(pastaFilha, linha, abaSuporte, respostasForms, nomeRespondente);
   }
   else if(nomeRespondente && pastaMae.getFoldersByName(nomeRespondente).hasNext()){
-    Logger.log('PASTA COM NOME ' + nomeRespondente + ' EXISTENTE');
+    let pastaFilha = pastaMae.getFoldersByName(nomeRespondente).next(); 
+    
+    Logger.log('*****************PASTA EXISTENTE*****************');
+    moverArquivo(pastaFilha, linha, abaSuporte, respostasForms, nomeRespondente);
   }
 
 }
