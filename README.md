@@ -7,7 +7,7 @@ Porém, alguns guarda-vidas estão tendo dificuldades de realizar o upload dessa
 Diante disso, esse Script foi criado com o intuito de automatizar o envio das imagens diárias por meio de um formulário eletrônico simples que pode ser respondido em menos de 3 minutos. De forma automatizada, as imagens são enviadas para suas respectivas pasta com base nas respostas dadas, considerando data, localidade e horário. Dessa forma, o esforço empenhado para esse procedimento diminui consideravelmente, levando em conta que são feitas 300 imagens por dia apenas para as praias do sul de Florianópolis.
 
 Ex: Foto do posto central de Nuafragados do dia 22/01/2025
-    Localização - Postos Praias Sul > Posto Central Naufragados > Janeiro > Posto Central Naufragados 22/01/2025 12:00:00 
+    Localização - Postos Praias Sul > Posto Central Naufragados > Janeiro > Posto Central Naufragados 22/01/2025 12:00:00.jpg
 
 O script renomeia os arquivos, busca o diretório referente ao posto e, dentro deste, busca o a pasta do mês com base na data informada, sendo esta seu destino para ser armazenada. 
 
