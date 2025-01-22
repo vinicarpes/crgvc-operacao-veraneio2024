@@ -1,0 +1,65 @@
+function main() {
+  let url ='https://docs.google.com/spreadsheets/d/1wQ_fwm3d9mJhXeu8gvHwmaRKEeTbjCkHYzS6i9aHG78/edit?resourcekey=&gid=378129164#gid=378129164';
+  let planilha = SpreadsheetApp.openByUrl(url);
+  let aba = planilha.getSheets()[0];
+  let dados = aba.getDataRange().getValues();
+  let idPastaMae = '11p8a6wAJ6agGpVYGXm7_vaVNMwo6zOw8';
+  let pastaMae = DriveApp.getFolderById(idPastaMae);
+  let pastaFilha = pastaMae.getFolders();
+
+  let linkFoto;
+  let idFoto;
+  let foto;
+  let posto;
+  let data;
+
+  for(let i=1; i<dados.length;i++){
+      linkFoto = dados[i][5];
+      idFoto = extrairIdArquivo(linkFoto);
+      foto = DriveApp.getFileById(idFoto);
+      posto = dados[i][2];
+      data = dados[i][3];
+      
+      foto.setName(posto + " " + data + " " + dados[i][4] + " ");
+
+      foto.moveTo(getPastaMes(pastaFilha,extrairMes(data), posto));
+      
+
+  }
+ 
+}
+
+function getPastaMes(pastaFilha,nomeMes, posto){
+  let pastaDestino = pastaFilha.getFoldersByName(posto);
+  let pastaMes = pastaDestino.getFoldersByName(nomeMes);
+  
+  return pastaMes;
+}
+
+function extrairMes(dataString){
+  // let dataArray = dataString.split('/');
+  // let dia = parseInt(dataArray[0],10);
+  // let mes = parseInt(dataArray[1],10) - 1;
+  // let ano = parseInt(dataArray[2], 10)
+
+  // data = new Date(ano, mes, dia)
+
+  const nomesMeses = [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ];
+
+  let nomeMes = nomesMeses[dataString.getMonth()];
+
+  Logger.log(nomeMes);  // Exibe o nome do mês no log
+
+  return nomeMes;
+}
+
+
+function extrairIdArquivo(link){
+
+  let match = link.match(/[-\w]{25,}/);
+
+  return match ? match[0] : null;
+}
