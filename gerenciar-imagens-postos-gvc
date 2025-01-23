@@ -12,6 +12,9 @@ function main() {
   let foto;
   let posto;
   let data;
+  let objData;
+  let horario;
+  let objHorario;
 
   for(let i=1; i<dados.length;i++){
       linkFoto = dados[i][5];
@@ -19,8 +22,16 @@ function main() {
       foto = DriveApp.getFileById(idFoto);
       posto = dados[i][2];
       data = dados[i][3];
+      horario = dados[i][4];
+
+      objData = new Date(data);
+      let dataFormatada = Utilities.formatDate(objData,'GMT-3','dd/MM/yyyy');
+
+      objHorario = new Date(horario);
+      let horarioFormatado = Utilities.formatDate(objHorario,  'GMT-3', 'HH:mm');
       
-      foto.setName(posto + " " + data + " " + dados[i][4] + " ");
+      foto.setName(posto + " - " + dataFormatada + " - " + horarioFormatado);
+      Logger.log(dataFormatada);
       Logger.log("Foto 1  da linha " + i + " renomeada com sucesso");  
 
       // foto.moveTo(getPastaMes(extrairMes(data), posto));
@@ -34,8 +45,16 @@ function main() {
       foto = DriveApp.getFileById(idFoto);
       posto = dados[i][6];
       data = dados[i][7];
+      horario = dados[i][8];
+
+      objData = new Date(data);
+      let dataFormatada = Utilities.formatDate(objData,'GMT-3','dd/MM/yyyy');
       
-      foto.setName(posto + " " + data + " " + dados[i][8] + " ");
+      objHorario = new Date(horario);
+      let horarioFormatado = Utilities.formatDate(objHorario,  'GMT-3', 'HH:mm');
+      
+      foto.setName(posto + " - " + dataFormatada + " - " + horarioFormatado);
+      
       Logger.log("Foto 2  da linha " + i + " renomeada com sucesso");
       
       // foto.moveTo(getPastaMes(extrairMes(data), posto));
@@ -52,8 +71,16 @@ function main() {
       foto = DriveApp.getFileById(idFoto);
       posto = dados[i][10];
       data = dados[i][11];
+      horario = dados[i][12]
+
+      objData = new Date(data);
+      let dataFormatada = Utilities.formatDate(objData,'GMT-3','dd/MM/yyyy');
+            
+      objHorario = new Date(horario);
+      let horarioFormatado = Utilities.formatDate(objHorario,  'GMT-3', 'HH:mm');
       
-      foto.setName(posto + " " + data + " " + dados[i][12] + " ");
+      foto.setName(posto + " - " + dataFormatada + " - " + horarioFormatado);
+      
       Logger.log("Foto 3  da linha " + i + " renomeada com sucesso");
 
       // foto.moveTo(getPastaMes(extrairMes(data), posto));
@@ -79,13 +106,6 @@ function getPastaMes(nomeMes, posto){
 }
 
 function extrairMes(dataString){
-  // let dataArray = dataString.split('/');
-  // let dia = parseInt(dataArray[0],10);
-  // let mes = parseInt(dataArray[1],10) - 1;
-  // let ano = parseInt(dataArray[2], 10)
-
-  // data = new Date(ano, mes, dia)
-
   const nomesMeses = [
     'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
