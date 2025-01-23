@@ -4,8 +4,8 @@ function main() {
   let aba = planilha.getSheets()[0];
   let dados = aba.getDataRange().getValues();
   let idPastaMae = '11p8a6wAJ6agGpVYGXm7_vaVNMwo6zOw8';
-  let pastaMae = DriveApp.getFolderById(idPastaMae);
-  let pastaFilha = pastaMae.getFolders();
+  let pastaMae = DriveApp.getFolderById(idPastaMae);//pasta raiz 
+  let pastaFilha = pastaMae.getFolders(); //armazena as pastas dos postos
 
   let linkFoto;
   let idFoto;
@@ -21,17 +21,59 @@ function main() {
       data = dados[i][3];
       
       foto.setName(posto + " " + data + " " + dados[i][4] + " ");
+      Logger.log("Foto 1  da linha " + i + " renomeada com sucesso");  
 
-      foto.moveTo(getPastaMes(pastaFilha,extrairMes(data), posto));
+      // foto.moveTo(getPastaMes(extrairMes(data), posto));
+      // Logger.log("Foto 2 armazenada com sucesso");
+  }
+
+   for(let i=1; i<dados.length;i++){
+    if(dados[i][9] != ""){
+      linkFoto = dados[i][9];
+      idFoto = extrairIdArquivo(linkFoto);
+      foto = DriveApp.getFileById(idFoto);
+      posto = dados[i][6];
+      data = dados[i][7];
       
+      foto.setName(posto + " " + data + " " + dados[i][8] + " ");
+      Logger.log("Foto 2  da linha " + i + " renomeada com sucesso");
+      
+      // foto.moveTo(getPastaMes(extrairMes(data), posto));
+      // Logger.log("Foto 2 armazenada com sucesso");
+     
+    }else{Logger.log("Foto 2 não informada da linha " + i);}
+
+  }
+
+   for(let i=1; i<dados.length;i++){
+    if(dados[i][13] != ""){
+      linkFoto = dados[i][13];
+      idFoto = extrairIdArquivo(linkFoto);
+      foto = DriveApp.getFileById(idFoto);
+      posto = dados[i][10];
+      data = dados[i][11];
+      
+      foto.setName(posto + " " + data + " " + dados[i][12] + " ");
+      Logger.log("Foto 3  da linha " + i + " renomeada com sucesso");
+
+      // foto.moveTo(getPastaMes(extrairMes(data), posto));
+      // Logger.log("Foto 3 armazenada com sucesso");
+      
+    }else{
+      Logger.log("Foto 3 não informada da linha " + i);
+    }
 
   }
  
 }
 
-function getPastaMes(pastaFilha,nomeMes, posto){
-  let pastaDestino = pastaFilha.getFoldersByName(posto);
-  let pastaMes = pastaDestino.getFoldersByName(nomeMes);
+function getPastaMes(nomeMes, posto){
+  let idPastaMae = '11p8a6wAJ6agGpVYGXm7_vaVNMwo6zOw8';
+  let pastaMae = DriveApp.getFolderById(idPastaMae);//pasta raiz 
+  let pastaFilha = pastaMae.getFolders(); //armazena as pastas dos postos
+
+  let pastaDestino = pastaFilha.getFoldersByName(posto);//precisa pegar dentro de pasta filha a pasta com o nome da variavel posto
+  let pastaMes = pastaDestino.getFoldersByName(nomeMes);//dentro da pasta destino, deve pegar a pasta com o nome da variavel nomeMes
   
   return pastaMes;
 }
