@@ -3,9 +3,6 @@ function main() {
   let planilha = SpreadsheetApp.openByUrl(url);
   let aba = planilha.getSheets()[0];
   let dados = aba.getDataRange().getValues();
-  let idPastaMae = '11p8a6wAJ6agGpVYGXm7_vaVNMwo6zOw8';
-  let pastaMae = DriveApp.getFolderById(idPastaMae);//pasta raiz 
-  let pastaFilha = pastaMae.getFolders(); //armazena as pastas dos postos
 
   let linkFoto;
   let idFoto;
@@ -16,7 +13,9 @@ function main() {
   let horario;
   let objHorario;
 
-  for(let i=1; i<dados.length;i++){
+  let ultimaLinha = aba.getLastRow()-1;
+
+  for(let i=ultimaLinha; i<dados.length;i++){
       linkFoto = dados[i][5];
       idFoto = extrairIdArquivo(linkFoto);
       foto = DriveApp.getFileById(idFoto);
@@ -28,17 +27,16 @@ function main() {
       let dataFormatada = Utilities.formatDate(objData,'GMT-3','dd/MM/yyyy');
 
       objHorario = new Date(horario);
-      let horarioFormatado = Utilities.formatDate(objHorario,  'GMT-3', 'HH:mm');
+      let horarioFormatado = Utilities.formatDate(objHorario,  'GMT-3', 'HH:mm:ss');
       
-      foto.setName(posto + " - " + dataFormatada + " - " + horarioFormatado);
-      Logger.log(dataFormatada);
-      Logger.log("Foto 1  da linha " + i + " renomeada com sucesso");  
-
-      // foto.moveTo(getPastaMes(extrairMes(data), posto));
-      // Logger.log("Foto 2 armazenada com sucesso");
+      foto.setName(dataFormatada + " - " + posto + " - " + horarioFormatado);
+      Logger.log(foto);
+      
+      foto.moveTo(getPastaMes(extrairMes(data), posto));
+      Logger.log("Foto 1 da linha " + (i+1) + " armazenada com sucesso");
   }
 
-   for(let i=1; i<dados.length;i++){
+   for(let i=ultimaLinha; i<dados.length;i++){
     if(dados[i][9] != ""){
       linkFoto = dados[i][9];
       idFoto = extrairIdArquivo(linkFoto);
@@ -51,20 +49,19 @@ function main() {
       let dataFormatada = Utilities.formatDate(objData,'GMT-3','dd/MM/yyyy');
       
       objHorario = new Date(horario);
-      let horarioFormatado = Utilities.formatDate(objHorario,  'GMT-3', 'HH:mm');
+      let horarioFormatado = Utilities.formatDate(objHorario,  'GMT-3', 'HH:mm:ss');
       
-      foto.setName(posto + " - " + dataFormatada + " - " + horarioFormatado);
+      foto.setName(dataFormatada + " - " + posto + " - " + horarioFormatado);
+      Logger.log(foto);
       
-      Logger.log("Foto 2  da linha " + i + " renomeada com sucesso");
-      
-      // foto.moveTo(getPastaMes(extrairMes(data), posto));
-      // Logger.log("Foto 2 armazenada com sucesso");
+      foto.moveTo(getPastaMes(extrairMes(data), posto));
+      Logger.log("Foto 2 da linha " + (i+1) + " armazenada com sucesso");
      
-    }else{Logger.log("Foto 2 não informada da linha " + i);}
+    }
 
   }
 
-   for(let i=1; i<dados.length;i++){
+   for(let i=ultimaLinha; i<dados.length;i++){
     if(dados[i][13] != ""){
       linkFoto = dados[i][13];
       idFoto = extrairIdArquivo(linkFoto);
@@ -77,17 +74,15 @@ function main() {
       let dataFormatada = Utilities.formatDate(objData,'GMT-3','dd/MM/yyyy');
             
       objHorario = new Date(horario);
-      let horarioFormatado = Utilities.formatDate(objHorario,  'GMT-3', 'HH:mm');
+      let horarioFormatado = Utilities.formatDate(objHorario,  'GMT-3', 'HH:mm:ss');
       
-      foto.setName(posto + " - " + dataFormatada + " - " + horarioFormatado);
+      foto.setName(dataFormatada + " - " + posto + " - " + horarioFormatado);
       
-      Logger.log("Foto 3  da linha " + i + " renomeada com sucesso");
+      Logger.log(foto);
 
-      // foto.moveTo(getPastaMes(extrairMes(data), posto));
-      // Logger.log("Foto 3 armazenada com sucesso");
+      foto.moveTo(getPastaMes(extrairMes(data), posto));
+      Logger.log("Foto 3 da linha " + (i+1) + " armazenada com sucesso");
       
-    }else{
-      Logger.log("Foto 3 não informada da linha " + i);
     }
 
   }
@@ -96,12 +91,27 @@ function main() {
 
 function getPastaMes(nomeMes, posto){
   let idPastaMae = '11p8a6wAJ6agGpVYGXm7_vaVNMwo6zOw8';
-  let pastaMae = DriveApp.getFolderById(idPastaMae);//pasta raiz 
-  let pastaFilha = pastaMae.getFolders(); //armazena as pastas dos postos
+  let pastaMae = DriveApp.getFolderById(idPastaMae);//pasta onde estão as pastas dos postos
+  let pastaFilhaIterator = pastaMae.getFoldersByName(posto); //iterador com as pastas dos postos com o nome da variavel
 
-  let pastaDestino = pastaFilha.getFoldersByName(posto);//precisa pegar dentro de pasta filha a pasta com o nome da variavel posto
-  let pastaMes = pastaDestino.getFoldersByName(nomeMes);//dentro da pasta destino, deve pegar a pasta com o nome da variavel nomeMes
+  //verifica se a pasta foi encontrada
+  if(!pastaFilhaIterator.hasNext()){
+    Logger.log('Pasta do posto ' + posto + ' não encontrada!');
+    return null;
+  }
+
+  let pastaPosto = pastaFilhaIterator.next();// pega a pasta do posto
+
+  let pastaMesIterator = pastaPosto.getFoldersByName(nomeMes);
+
+  if(!pastaMesIterator.hasNext()){
+    Logger.log('Criando pasta para ' + nomeMes + ' em ' + pastaPosto.getName());
+    pastaPosto.createFolder(nomeMes);
+    
+    return getPastaMes(nomeMes, posto);
+  }
   
+  let pastaMes = pastaMesIterator.next();
   return pastaMes;
 }
 
