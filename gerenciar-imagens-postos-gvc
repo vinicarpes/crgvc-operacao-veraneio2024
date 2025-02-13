@@ -44,11 +44,12 @@ function main() {
   let colunaData=7;
   let colunaHorario =8;
   let qtdColuna =49;
+  let cont = 2;
 
 
   for(let j=ultimaLinha;j<dadosLength; j++){
-    for(let i=9;i<=qtdColuna;i+=4){
-      if(dados[ultimaLinha][i]!='' && dados[ultimaLinha][colunaPosto]){
+    for(let i=9;i<qtdColuna;i+=4){
+      if(dados[j][i]!='' && dados[j][colunaPosto]){
         linkFoto = dados[j][colunasDados];
         idFoto = extrairIdArquivo(linkFoto);
         foto = DriveApp.getFileById(idFoto);
@@ -66,13 +67,13 @@ function main() {
         Logger.log(foto);
         
         foto.moveTo(getPastaMes(extrairMes(data), posto));
-        Logger.log("Foto da linha " + (j+1) + " armazenada com sucesso");
+        Logger.log("Foto "+ cont +" da linha " + (j+1) + " armazenada com sucesso");
       }
     colunasDados += 4;
     colunaPosto += 4;
     colunaData += 4;
     colunaHorario += 4;
-    qtdColuna += 4;
+    cont++;
     }
   }
 
